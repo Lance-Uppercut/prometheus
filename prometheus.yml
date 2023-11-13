@@ -1,0 +1,59 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: 'efk-stack'
+    static_configs:
+      - targets: ['192.168.1.18:9100']
+  - job_name: 'monitor'
+    static_configs:
+      - targets: ['192.168.1.60:9100']
+  - job_name: 'alexa-sinric-service'
+    static_configs:
+      - targets: ['192.168.1.92:8081']
+    metrics_path: /actuator/prometheus
+    scheme: http
+  - job_name: 'forever-iot'
+    static_configs:
+      - targets: ['soeren.herokuapp.com:443']
+    metrics_path: /actuator/prometheus
+    scheme: https
+  - job_name: 'heroku-drain-promtail'
+    static_configs:
+      - targets: ['192.168.1.60:9070']
+    metrics_path: /metrics
+  - job_name: 'promtail'
+    static_configs:
+      - targets: ['192.168.1.60:9080']
+    metrics_path: /metrics
+remote_write:
+  - url: https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push
+    basic_auth:
+      username: 1186716
+      password: glc_eyJvIjoiOTQzNzI3IiwibiI6InN0YWNrLTczOTQwMC1obS13cml0ZS1mb3ItcHVibGlzaGluZy1wcm9tZXRoZXVzLW1ldHJpY3MtdG9rZW4iLCJrIjoiS2tjOWcyMFlYNjJTY1RSYzk0Mnp1MTVzIiwibSI6eyJyIjoicHJvZC11cy1lYXN0LTAifX0=
+
