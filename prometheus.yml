@@ -34,8 +34,9 @@ scrape_configs:
     scheme: https
   - job_name: 'heroku-drain-promtail'
     static_configs:
-      - targets: ['192.168.1.60:9070']
+      - targets: ['promtail-configs-heroku.fly.dev:9080']
     metrics_path: /metrics
+    scheme: https
 remote_write:
   - url: https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push
     basic_auth:
